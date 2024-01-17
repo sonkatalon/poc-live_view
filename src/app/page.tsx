@@ -63,27 +63,32 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="mb-32 flex text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:text-left">
+      <form className="mb-32 flex text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:text-left">
         <input
           className="flex-grow m-2 p-2"
+          defaultValue="https://news.ycombinator.com"
           disabled={recordState !== "done"}
           placeholder="https://domain.com"
           ref={urlRef}
+          type="url"
         />
         {recordState === "done" ? (
-          <button className="w-20" onClick={startRecording}>
-            Record
-          </button>
+          <input
+            className="w-20"
+            onClick={startRecording}
+            type="submit"
+            value="Record"
+          />
         ) : (
-          <button
+          <input
             className="w-20"
             disabled={recordState !== "recording"}
             onClick={stopRecording}
-          >
-            Done
-          </button>
+            type="submit"
+            value="Done"
+          />
         )}
-      </div>
+      </form>
 
       <div
         style={{ width: `${width}px`, height: `${height}px` }}

@@ -15,6 +15,9 @@ export async function createDevice({
   width: number;
   height: number;
 }): Promise<Device> {
+  // make sure a valid URL is provided
+  new URL(url);
+
   return new Promise((resolve) => {
     const containerPort = 5900;
     const hostPort = ++lastHostPort;
@@ -29,10 +32,8 @@ export async function createDevice({
       `--rm`,
       `poc-image`,
       `google-chrome`,
+      `--app=${url}`,
     ];
-    if (url.length > 0) {
-      args.push(url);
-    }
     const docker = spawn("docker", args);
     killers[hostPort] = () => docker.kill("SIGINT");
 
