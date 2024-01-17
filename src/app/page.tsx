@@ -32,7 +32,13 @@ export default function Home() {
   const startRecording = useCallback(async () => {
     setRecordState("creating");
     setDevice(
-      await createDevice({ url: urlRef.current?.value ?? "", width, height })
+      await createDevice({
+        hostname: window.location.hostname,
+        isSecure: window.location.protocol === "https:",
+        url: urlRef.current?.value ?? "",
+        width,
+        height,
+      })
     );
     setRecordState("recording");
   }, [setRecordState]);

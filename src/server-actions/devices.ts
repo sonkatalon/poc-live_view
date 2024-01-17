@@ -7,10 +7,14 @@ let lastHostPort = 3000;
 const killers: Record<number, Function> = {};
 
 export async function createDevice({
+  hostname,
+  isSecure,
   url,
   width,
   height,
 }: {
+  hostname: string;
+  isSecure: boolean;
   url: string;
   width: number;
   height: number;
@@ -40,7 +44,10 @@ export async function createDevice({
     docker.stdout.on("data", (data) => {
       const stdout = data.toString("utf8");
       if (stdout === `PORT=${containerPort}\n`) {
-        resolve({ hostPort, rfbUrl: `ws://localhost:${hostPort}` });
+        resolve({
+          hostPort,
+          rfbUrl: `${isSecure ? "wss" : "ws"}://${hostname}:${hostPort}`,
+        });
       }
     });
     docker.on("error", (error) => console.error({ error }));
