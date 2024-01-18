@@ -23,6 +23,7 @@ export async function createDevice({
   new URL(url);
 
   return new Promise((resolve) => {
+    const dockerImage = "poc-device:chrome"; // must matches the image name in `./scripts/dev.sh`
     const containerPort = 5900;
     const hostPort = ++lastHostPort;
     const args = [
@@ -34,20 +35,26 @@ export async function createDevice({
       `--publish`,
       `${hostPort}:${containerPort}`,
       `--rm`,
-      `poc-image`,
+      dockerImage,
       `google-chrome`,
       `--app=${url}`,
     ];
     const docker = spawn("docker", args);
-    killers[hostPort] = () => docker.kill("SIGINT");
+    killers[hostPort] = () => {
+      console.log("Killing docker", { hostPort });
+      docker.kill("SIGINT");
+    };
+    console.log("Spawning container", { args });
 
     docker.stdout.on("data", (data) => {
       const stdout = data.toString("utf8");
       if (stdout === `PORT=${containerPort}\n`) {
-        resolve({
+        const device: Device = {
           hostPort,
           rfbUrl: `${isSecure ? "wss" : "ws"}://${hostname}:${hostPort}`,
-        });
+        };
+        console.log("Container is ready", { device });
+        resolve(device);
       }
     });
     docker.on("error", (error) => console.error({ error }));

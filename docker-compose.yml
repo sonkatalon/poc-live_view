@@ -1,0 +1,15 @@
+version: "2"
+
+services:
+  nextjs:
+    build:
+      context: ./docker/node
+    command:
+      - /poc/scripts/dev.sh
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/poc
+      - ./docker/node_modules:/poc/node_modules
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /poc
