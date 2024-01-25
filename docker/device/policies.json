@@ -1,0 +1,7 @@
+{
+  "DeveloperToolsAvailability": 2,
+  "URLBlocklist": [
+    "file://*",
+    "chrome://policy"
+  ]
+}
