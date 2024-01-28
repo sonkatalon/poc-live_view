@@ -10,11 +10,16 @@ const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
   const app = express();
+  app.use(express.json());
 
   const server = http.createServer(app);
   const io = new Server(server);
   io.on("connection", (socket) => {
     console.log("a user connected");
+  });
+  app.post("/relay/click", (req, res) => {
+    io.emit("click", req.body);
+    res.send("click: OK");
   });
 
   app.all("*", (req, res) => {
