@@ -1,1 +1,11 @@
-document.addEventListener("click", (e) => alert(`Hello ${e}`));
+document.addEventListener("click", (event) => {
+  chrome.runtime.sendMessage(
+    {
+      url: "http://nextjs:3000/relay/click",
+      body: { target: event.target.outerHTML },
+    },
+    function (response) {
+      alert(JSON.stringify(response));
+    }
+  );
+});
